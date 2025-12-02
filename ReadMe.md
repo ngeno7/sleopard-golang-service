@@ -28,6 +28,8 @@ To install the packages
 
 2. Import tables and seed data
 
+Update the .env file accordingly based on .env.example
+
 ```sh
 
 mysql -u username -p dbname < tables.sql
