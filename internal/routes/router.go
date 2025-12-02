@@ -15,4 +15,5 @@ func RegisterCampaignRoutes(router *mux.Router) {
     router.HandleFunc("/campaigns", handlers.GetAllCampaigns).Methods("GET")
     router.HandleFunc("/campaigns/{id}", handlers.GetCampaign).Methods("GET")
     router.HandleFunc("/campaigns", handlers.CreateCampaign).Methods("POST")
+    router.HandleFunc("/campaigns/{id}/send", handlers.SendCampaign).Methods("POST")
 }

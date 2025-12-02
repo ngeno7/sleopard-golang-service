@@ -2,7 +2,9 @@ package repositories
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
+	"strings"
 
 	"leopard.test/v2/internal/db"
 	"leopard.test/v2/internal/models"
@@ -94,4 +96,51 @@ func GetAllCampaigns() (*[]models.Campaign, error) {
 	}
 
 	return &campaigns, nil
+}
+
+func SendCampaign(customerIds []int64, campaignId int64) (error) {
+
+	conn, err := db.Connect()
+	if err != nil {
+		return err
+	}
+
+	placeholders := make([]string, len(customerIds))
+	args := make([]interface{}, len(customerIds))
+
+	for i, v := range customerIds {
+	    placeholders[i] = "?"
+	    args[i] = v
+	}
+
+	query := fmt.Sprintf(
+				"SELECT first_name, last_name, preferred_product, location FROM customers IN (%s)", 
+					 strings.Join(placeholders, ","),
+			)
+
+	cQuery := "SELECT base_template FROM campaigns WHERE id=? LIMIT 1"
+
+	var messageTemplate *string
+	err = conn.QueryRow(cQuery, campaignId).Scan(&messageTemplate)
+	if err != nil {
+		log.Fatalf("Error %v", err)
+		return err
+	}
+
+	rows,err := conn.Query(query)
+
+	if err != nil {
+		log.Fatalf("Error %v", err)
+		return err
+	}
+
+	
+	for rows.Next() {
+		var customer models.Customer
+		rows.Scan(&customer.FirstName, &customer.LastName, &customer.PreferredProduct, &customer.Location)
+
+		// replace the values in the template {first_name} {last_name}
+	}
+
+	return nil
 }

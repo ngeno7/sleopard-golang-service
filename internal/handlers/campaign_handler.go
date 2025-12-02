@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -63,4 +64,18 @@ func GetAllCampaigns(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(campaigns)
+}
+
+func SendCampaign(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	id, err := strconv.ParseInt(vars["id"], 10, 64)
+	if err != nil {
+	   http.Error(w, "Invalid campaign parameter", http.StatusInternalServerError)
+	   return
+	}
+	// send to RabbitMQ Campaign Queue
+	log.Printf("%i campaign sent \n", id)
+
+	json.NewEncoder(w).Encode("Campaign Has been sent to the queue")
 }
