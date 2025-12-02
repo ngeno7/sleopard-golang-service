@@ -19,24 +19,24 @@ I have used ChatGPT to optimize code debugging and how to implement concepts suc
 ## How to Run
 1. Install packages
 
-``sh
+```sh
 
 go mod tidy
 
-``
+```
 To install the packages
 
 2. Import tables and seed data
 
-``sh
+```sh
 
 mysql -u username -p dbname < tables.sql
 
-``
+```
 
 3. Run the Project
 At the root of the project.
 
-``sh
+```sh
 go run cmd/api/main.go
-``
+```
